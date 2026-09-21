@@ -52,7 +52,7 @@ Add this block, or edit an existing `Host scg` block instead of duplicating it:
 
 ```text
 Host scg
-    HostName login04.scg.stanford.edu
+    HostName login.scg.stanford.edu
     User rosenwu
     ServerAliveInterval 60
     ServerAliveCountMax 3
