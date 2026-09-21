@@ -1,7 +1,5 @@
 # SCG + Oak
 
-Created by **Rosen** to help new **Delitto and Foster lab members** get started with basic terminal commands and SCG/Oak.
-
 With thanks to [Stanford’s official SCG guide](https://login.scg.stanford.edu/), [Chuner’s GitHub resources](https://github.com/chunerguo/resources), and James’s GitHub guide.
 
 **SCG** is Stanford’s shared research computing system: you connect to its computers to run analyses. **Oak** is Stanford’s large research storage system, where your lab keeps data and results.
