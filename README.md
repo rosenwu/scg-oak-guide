@@ -400,8 +400,6 @@ Logs may not exist while pending. After the job leaves `squeue`, use `sacct`; ac
 
 Sources: [SCG Slurm tutorial](https://login.scg.stanford.edu/tutorials/job_scripts/), [SCG account selection](https://login.scg.stanford.edu/faqs/account/), [SCG partition examples](https://login.scg.stanford.edu/scg_primer/), and [Slurm sbatch reference](https://slurm.schedmd.com/sbatch.html).
 
-## 10. More command lines incoming
-
-## 11. VS Code setup
+## 10.  VS Code setup
 
 Coming soon.
