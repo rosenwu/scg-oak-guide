@@ -40,29 +40,39 @@ Run `exit` to log out. [SCG connection instructions](https://login.scg.stanford.
 
 ## 3. Make a login shortcut
 
-**Laptop • one-time setup.** Open your SSH configuration:
+**Laptop • one-time setup, before logging into SCG.** SSH means **Secure Shell**. Open your local SSH configuration:
 
 ```bash
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
-nano ~/.ssh/config
+mkdir -p ~/.ssh       # mkdir = make directory; -p creates missing parents and allows an existing folder
+chmod 700 ~/.ssh      # chmod = change permissions; 700 gives only you access to this folder
+nano ~/.ssh/config   # nano = a text editor; open or create your SSH configuration file
 ```
 
 Add this block, or edit an existing `Host scg` block instead of duplicating it:
 
 ```text
 Host scg
-    HostName login.scg.stanford.edu
+    HostName login04.scg.stanford.edu
     User rosenwu
     ServerAliveInterval 60
     ServerAliveCountMax 3
 ```
 
+| Setting | Meaning |
+| --- | --- |
+| `Host scg` | The shortcut name you choose; use it in `ssh scg`. |
+| `HostName login04.scg.stanford.edu` | The actual server address. Keep this for the login04 SCG node. |
+| `User rosenwu` | Your SUNetID for login. |
+| `ServerAliveInterval 60` | After 60 seconds without server data, send a connection check. |
+| `ServerAliveCountMax 3` | Disconnect after three unanswered checks. |
+
+`nano` is a text editor; `alias` gives a command a shorter name. `chmod` means **change mode** (permissions): `700` restricts the SSH folder to you; `600` lets only you read and write the configuration file.
+
 In nano, save with **Ctrl+O**, Enter, then exit with **Ctrl+X**. Then:
 
 ```bash
-chmod 600 ~/.ssh/config
-ssh scg
+chmod 600 ~/.ssh/config  # Only you can read and write this file
+ssh scg                  # SSH = Secure Shell; connect using your saved shortcut
 ```
 
 A fixed node keeps your tmux sessions easy to find. If it is unavailable, use `ssh rosenwu@login.scg.stanford.edu`; tmux sessions remain on the original node.
@@ -87,7 +97,43 @@ du -sh project_example      # Estimate folder size; can be slow
 less notes.txt              # Read an existing text file; q quits
 ```
 
-Use Tab to complete names and ↑ to recall commands. Quote paths containing spaces: `cd "folder with spaces"`. `~` means your home on the machine where the command runs. Large recursive scans can burden shared storage; avoid scanning the whole lab unnecessarily.
+**Go straight to your Oak folder • on SCG:**
+
+```bash
+cd ~/oak
+```
+
+`cd` means change directory, `~` means your SCG home folder, and `oak` is the shortcut created in section 5. Once that shortcut exists, this command takes you to your Oak folder from anywhere on SCG. Run `ls` to see its contents. If you get “No such file or directory,” set up the shortcut in section 5 first.
+
+**Explore the folder structure with `tree` • on SCG:**
+
+```bash
+tree -L 2 .           # tree = show a folder diagram; -L 2 limits it to two levels; . = here
+tree -d -L 2 ~/oak    # -d = directories only; show folders within your Oak shortcut
+tree -a -L 2 .        # -a = also show hidden files and folders
+tree -L 2 -I '*.bam|*.fastq.gz' .  # -I = hide names matching these patterns
+```
+
+
+
+| Command | Full wording or plain-language meaning |
+| --- | --- |
+| `pwd` | Print working directory — show your current folder. |
+| `ls` | List — show files and folders. |
+| `cd` | Change directory — move to another folder. |
+| `mkdir` | Make directory — create a folder. |
+| `du` | Disk usage — report space used by files or folders. |
+| `cp` / `mv` | Copy / move (also used to rename). |
+| `ln -s` | Link, symbolic — create a shortcut to another path. |
+| `rsync` | Remote synchronization — copy or update files locally or between computers. |
+| `ps` | Process status — list running processes. |
+| `tail` | Show the end of a file; `-f` follows new output. |
+| `tmux` | Terminal multiplexer — keep multiple terminal views in a session. |
+| `sbatch` / `squeue` / `sacct` / `scancel` | Slurm commands to submit a batch script / view the queue / view job accounting / cancel a job. |
+
+**Options depend on the command.** For `ls -lah`: `-l` = long listing, `-a` = all entries including hidden files, `-h` = readable sizes. For `mkdir -p`, `-p` creates missing parent folders. For `du -sh`, `-s` summarizes and `-h` shows readable sizes. `~` = home; `..` = parent folder. Some command names are names rather than acronyms.
+
+**Use Tab to complete folder names.** For a folder named `project_example` in your current directory, type `cd pro`, then press **Tab** to fill in the rest. Press **Enter** to enter the folder. If several names start with `pro`, type more letters and press Tab again; in many shells, pressing Tab twice shows the matching names. Use ↑ to recall previous commands. Quote paths containing spaces: `cd "folder with spaces"`. `~` means your home on the machine where the command runs. Large recursive scans can burden shared storage; avoid scanning the whole lab unnecessarily.
 
 ## 5. Link SCG home to Oak
 
@@ -169,9 +215,13 @@ mv -i sample_A.txt sample_B.txt archive/   # Move both; ask before overwriting
 
 ## 7. Codex CLI and Claude Code
 
+**Check access before installing.** Not everyone has the same eligibility or an activated account. Check Stanford’s [Claude for Education](https://uit.stanford.edu/service/claude) and [ChatGPT Edu](https://uit.stanford.edu/service/openai-chatgpt-edu) pages for account requests and current access details. Both list free Standard access for active students, faculty, postdocs, and staff, with a separate affiliate request route. Use the Help request link on either page to ask IT to confirm your affiliation and access to Codex or Claude Code.
+
+**For residents:** You may need to contact Virginia Ford at [vmford@stanford.edu](mailto:vmford@stanford.edu) for help setting up a postdoc affiliation. I'm happy to help if you have more questions.
+
+
 **Recommended starting point: your laptop, inside a folder of approved code.** These tools can read files, send context to external services, edit code, and run commands. Use only Stanford/lab-approved accounts and data. Do not expose PHI, restricted datasets, credentials, or private keys. A personal subscription is not evidence of institutional approval.
 
-**SCG use is conditional:** confirm external AI use and installation with your PI/SCG admins. Check `module avail` first. Use a user-owned install; never use `sudo` or alter system libraries. Ask in `#scg-software-requests` if installation is incompatible. Vendor commands below are not a claim of SCG certification and have not been tested on this cluster. See [SCG help](https://login.scg.stanford.edu/contact/) and [modules](https://login.scg.stanford.edu/quick_start/).
 
 **Codex • supported macOS/Linux environment:**
 
@@ -350,8 +400,8 @@ Logs may not exist while pending. After the job leaves `squeue`, use `sacct`; ac
 
 Sources: [SCG Slurm tutorial](https://login.scg.stanford.edu/tutorials/job_scripts/), [SCG account selection](https://login.scg.stanford.edu/faqs/account/), [SCG partition examples](https://login.scg.stanford.edu/scg_primer/), and [Slurm sbatch reference](https://slurm.schedmd.com/sbatch.html).
 
-## 10. Set up ProxyJump on your local computer
+## 10. More command lines incoming
 
-ProxyJump lets SSH use one computer as a stepping stone to another. You configure it on your laptop when the destination must be reached through a designated gateway.
+## 11. VS Code setup
 
-Setup instructions incoming — the gateway and destination still need to be specified.
+Coming soon.
